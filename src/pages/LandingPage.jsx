@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import ParallaxBackground from '../components/ParallaxBackground';
+import ScrollStack, { ScrollStackItem } from '../components/ScrollStack';
 import { getStoredToken, getStoredUser } from '../utils/authStorage';
 
 const LightPillar = lazy(() => import('../components/LightPillar'));
@@ -192,138 +193,126 @@ const LandingPage = () => {
                 </ScrollReveal>
             </section>
 
-            <ScrollReveal delay={0.12}>
-                <section className="py-24 bg-black relative z-10">
-                    <div className="max-w-7xl mx-auto px-6">
-                        <div className="mb-16">
-                            <h2 className="text-3xl font-bold text-white mb-4">The Engine</h2>
-                            <p className="text-zinc-400 max-w-xl">
-                                Purpose-built tools designed to extract, structure, and cement knowledge into your long-term memory.
+            <section className="py-24 bg-black relative z-10 border-y border-zinc-900/60">
+                <div className="max-w-7xl mx-auto px-6 mb-2">
+                    <h2 className="text-3xl font-bold text-white mb-4">The Engine</h2>
+                    <p className="text-zinc-400 max-w-xl">
+                        Purpose-built tools designed to extract, structure, and cement knowledge into your long-term memory.
+                    </p>
+                </div>
+
+                <ScrollStack
+                    className="px-2"
+                    useWindowScroll
+                    itemDistance={120}
+                    itemScale={0.03}
+                    itemStackDistance={32}
+                    stackPosition="20%"
+                    scaleEndPosition="10%"
+                    baseScale={0.85}
+                    scaleDuration={0.5}
+                    rotationAmount={0}
+                    blurAmount={0}
+                >
+                    <ScrollStackItem itemClassName="group border border-zinc-800 bg-zinc-900/45 backdrop-blur-xl overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#5227FF]/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 h-full items-center">
+                            <div>
+                                <div className="w-12 h-12 rounded-lg bg-zinc-800/80 flex items-center justify-center mb-5 border border-zinc-700 group-hover:border-[#5227FF]/50 transition-colors">
+                                    <FileText className="w-6 h-6 text-[#5227FF]" />
+                                </div>
+                                <h3 className="text-2xl font-semibold text-white mb-3">High-Fidelity Ingestion</h3>
+                                <p className="text-zinc-400 leading-relaxed">
+                                    Comprehensive extraction, not bot-scraped garbage. Captures relationships, edge cases, and worked examples from complex academic texts.
+                                </p>
+                            </div>
+
+                            <div className="w-full bg-black/60 rounded-xl border border-zinc-800 p-4 shadow-2xl overflow-hidden">
+                                <div className="flex items-center gap-2 mb-4 border-b border-zinc-800 pb-2">
+                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+                                    <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
+                                </div>
+                                <div className="space-y-3 font-mono text-xs lg:text-[13px]">
+                                    <div className="text-zinc-500">{'{'}</div>
+                                    <div className="pl-4">
+                                        <span className="text-blue-400">"type"</span>: <span className="text-green-400">"concept_relation"</span>,
+                                    </div>
+                                    <div className="pl-4">
+                                        <span className="text-blue-400">"front"</span>: <span className="text-green-400">"How does synaptic plasticity relate to LTP?"</span>,
+                                    </div>
+                                    <div className="pl-4">
+                                        <span className="text-blue-400">"back"</span>: <span className="text-green-400">"LTP is a persistent strengthening..."</span>
+                                    </div>
+                                    <div className="text-zinc-500">{'}'}</div>
+                                </div>
+                            </div>
+                        </div>
+                    </ScrollStackItem>
+
+                    <ScrollStackItem itemClassName="group border border-zinc-800 bg-zinc-900/45 backdrop-blur-xl overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#5227FF]/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex flex-col h-full">
+                            <div className="w-12 h-12 rounded-lg bg-zinc-800/80 flex items-center justify-center mb-5 border border-zinc-700 group-hover:border-[#5227FF]/50 transition-colors">
+                                <Layers className="w-6 h-6 text-[#5227FF]" />
+                            </div>
+                            <h3 className="text-2xl font-semibold text-white mb-3">Spaced Repetition Engine</h3>
+                            <p className="text-zinc-400 leading-relaxed mb-8">
+                                Smart fading. Cards you know intuitively fade away; cards you struggle with return precisely when you&apos;re about to forget them.
                             </p>
+
+                            <div className="mt-auto pt-6 border-t border-zinc-800/50">
+                                <div className="flex items-end gap-2 h-28">
+                                    {[30, 45, 25, 60, 40, 75, 50, 90].map((h, i) => (
+                                        <div key={i} className="flex-1 bg-zinc-800 rounded-t-sm relative group-hover:bg-zinc-700 transition-colors" style={{ height: `${h}%` }}>
+                                            {i === 7 ? <div className="absolute top-0 inset-x-0 h-full bg-[#5227FF]/40 rounded-t-sm" /> : null}
+                                        </div>
+                                    ))}
+                                </div>
+                                <div className="flex justify-between text-[11px] text-zinc-500 mt-2 uppercase tracking-wider font-semibold">
+                                    <span>Day 1</span>
+                                    <span className="text-[#5227FF]">Review Today</span>
+                                </div>
+                            </div>
                         </div>
+                    </ScrollStackItem>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <motion.div
-                                initial={{ opacity: 0, y: 16 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, amount: 0.25 }}
-                                transition={{ duration: 0.6, ease: [0.21, 0.47, 0.32, 0.98] }}
-                                className="md:col-span-2 group relative rounded-2xl border border-zinc-800 bg-zinc-900/30 p-8 overflow-hidden hover:border-[#5227FF]/50 transition-colors"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#5227FF]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                    <ScrollStackItem itemClassName="group border border-zinc-800 bg-zinc-900/45 backdrop-blur-xl overflow-hidden">
+                        <div className="absolute inset-0 bg-gradient-to-br from-[#5227FF]/8 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
+                        <div className="relative z-10 flex flex-col h-full">
+                            <div className="w-12 h-12 rounded-lg bg-zinc-800/80 flex items-center justify-center mb-5 border border-zinc-700 group-hover:border-[#5227FF]/50 transition-colors">
+                                <BarChart3 className="w-6 h-6 text-[#5227FF]" />
+                            </div>
+                            <h3 className="text-2xl font-semibold text-white mb-3">Mastery Analytics</h3>
+                            <p className="text-zinc-400 leading-relaxed mb-8">
+                                Track what&apos;s solid, what&apos;s shaky, and what&apos;s due for review. Visualize your journey from cramming to genuine comprehension.
+                            </p>
 
-                                <div className="relative z-10 flex flex-col md:flex-row gap-8 items-center">
-                                    <div className="flex-1">
-                                        <div className="w-12 h-12 rounded-lg bg-zinc-800/80 flex items-center justify-center mb-6 border border-zinc-700 group-hover:border-[#5227FF]/50 transition-colors">
-                                            <FileText className="w-6 h-6 text-[#5227FF]" />
-                                        </div>
-                                        <h3 className="text-2xl font-semibold text-white mb-3">High-Fidelity Ingestion</h3>
-                                        <p className="text-zinc-400 leading-relaxed">
-                                            Comprehensive extraction, not bot-scraped garbage. Captures relationships, edge cases, and worked examples from complex academic texts.
-                                        </p>
+                            <div className="mt-auto space-y-4 pt-6 border-t border-zinc-800/50">
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-xs">
+                                        <span className="text-zinc-300 font-medium">Neuroscience 101</span>
+                                        <span className="text-[#5227FF] font-mono">82%</span>
                                     </div>
-
-                                    <div className="flex-1 w-full bg-black/60 rounded-xl border border-zinc-800 p-4 shadow-2xl overflow-hidden">
-                                        <div className="flex items-center gap-2 mb-4 border-b border-zinc-800 pb-2">
-                                            <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                                            <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                                            <div className="w-2.5 h-2.5 rounded-full bg-zinc-700" />
-                                        </div>
-                                        <div className="space-y-3 font-mono text-xs">
-                                            <div className="text-zinc-500">{"{"}</div>
-                                            <div className="pl-4">
-                                                <span className="text-blue-400">"type"</span>: <span className="text-green-400">"concept_relation"</span>,
-                                            </div>
-                                            <div className="pl-4">
-                                                <span className="text-blue-400">"front"</span>: <span className="text-green-400">"How does synaptic plasticity relate to LTP?"</span>,
-                                            </div>
-                                            <div className="pl-4">
-                                                <span className="text-blue-400">"back"</span>: <span className="text-green-400">"LTP is a persistent strengthening..."</span>
-                                            </div>
-                                            <div className="text-zinc-500">{"}"}</div>
-                                        </div>
+                                    <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div className="w-[82%] h-full bg-[#5227FF]" />
                                     </div>
                                 </div>
-                            </motion.div>
 
-                            <motion.div
-                                initial={{ opacity: 0, y: 16 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, amount: 0.25 }}
-                                transition={{ duration: 0.62, delay: 0.07, ease: [0.21, 0.47, 0.32, 0.98] }}
-                                className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/30 p-8 overflow-hidden hover:border-[#5227FF]/50 transition-colors"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#5227FF]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                                <div className="relative z-10 flex flex-col h-full">
-                                    <div className="w-12 h-12 rounded-lg bg-zinc-800/80 flex items-center justify-center mb-6 border border-zinc-700 group-hover:border-[#5227FF]/50 transition-colors">
-                                        <Layers className="w-6 h-6 text-[#5227FF]" />
+                                <div className="space-y-2">
+                                    <div className="flex justify-between text-xs">
+                                        <span className="text-zinc-300 font-medium">Cellular Biology</span>
+                                        <span className="text-zinc-300 font-mono">45%</span>
                                     </div>
-                                    <h3 className="text-xl font-semibold text-white mb-3">Spaced Repetition Engine</h3>
-                                    <p className="text-zinc-400 leading-relaxed mb-8 flex-grow">
-                                        Smart fading. Cards you know intuitively fade away; cards you struggle with return precisely when you're about to forget them.
-                                    </p>
-
-                                    <div className="mt-auto pt-6 border-t border-zinc-800/50">
-                                        <div className="flex items-end gap-2 h-24">
-                                            {[30, 45, 25, 60, 40, 75, 50, 90].map((h, i) => (
-                                                <div key={i} className="flex-1 bg-zinc-800 rounded-t-sm relative group-hover:bg-zinc-700 transition-colors" style={{ height: `${h}%` }}>
-                                                    {i === 7 && <div className="absolute top-0 inset-x-0 h-full bg-[#5227FF]/40 rounded-t-sm" />}
-                                                </div>
-                                            ))}
-                                        </div>
-                                        <div className="flex justify-between text-[10px] text-zinc-500 mt-2 uppercase tracking-wider font-semibold">
-                                            <span>Day 1</span>
-                                            <span className="text-[#5227FF]">Review Today</span>
-                                        </div>
+                                    <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
+                                        <div className="w-[45%] h-full bg-zinc-600" />
                                     </div>
                                 </div>
-                            </motion.div>
-
-                            <motion.div
-                                initial={{ opacity: 0, y: 16 }}
-                                whileInView={{ opacity: 1, y: 0 }}
-                                viewport={{ once: true, amount: 0.25 }}
-                                transition={{ duration: 0.62, delay: 0.11, ease: [0.21, 0.47, 0.32, 0.98] }}
-                                className="group relative rounded-2xl border border-zinc-800 bg-zinc-900/30 p-8 overflow-hidden hover:border-[#5227FF]/50 transition-colors"
-                            >
-                                <div className="absolute inset-0 bg-gradient-to-br from-[#5227FF]/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity" />
-
-                                <div className="relative z-10 flex flex-col h-full">
-                                    <div className="w-12 h-12 rounded-lg bg-zinc-800/80 flex items-center justify-center mb-6 border border-zinc-700 group-hover:border-[#5227FF]/50 transition-colors">
-                                        <BarChart3 className="w-6 h-6 text-[#5227FF]" />
-                                    </div>
-                                    <h3 className="text-xl font-semibold text-white mb-3">Mastery Analytics</h3>
-                                    <p className="text-zinc-400 leading-relaxed mb-8 flex-grow">
-                                        Track what's solid, what's shaky, and what's due for review. Visualize your journey from cramming to genuine comprehension.
-                                    </p>
-
-                                    <div className="mt-auto space-y-4 pt-6 border-t border-zinc-800/50">
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between text-xs">
-                                                <span className="text-zinc-300 font-medium">Neuroscience 101</span>
-                                                <span className="text-[#5227FF] font-mono">82%</span>
-                                            </div>
-                                            <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                                                <div className="w-[82%] h-full bg-[#5227FF]" />
-                                            </div>
-                                        </div>
-                                        <div className="space-y-2">
-                                            <div className="flex justify-between text-xs">
-                                                <span className="text-zinc-300 font-medium">Cellular Biology</span>
-                                                <span className="text-zinc-400 font-mono">45%</span>
-                                            </div>
-                                            <div className="w-full h-1.5 bg-zinc-800 rounded-full overflow-hidden">
-                                                <div className="w-[45%] h-full bg-zinc-600" />
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </motion.div>
+                            </div>
                         </div>
-                    </div>
-                </section>
-            </ScrollReveal>
+                    </ScrollStackItem>
+                </ScrollStack>
+            </section>
 
             <ScrollReveal delay={0.16}>
                 <section className="py-24 border-t border-zinc-900 bg-black relative z-10">

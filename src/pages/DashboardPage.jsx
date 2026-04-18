@@ -5,7 +5,7 @@ import { Upload, FileText, Play, Clock, Zap, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import Orb from '../components/Orb';
+import DarkVeil from '../components/DarkVeil';
 import { useCurrentUser, useDecks, useMasteryStats } from '../hooks/queries';
 import { getStoredUser } from '../utils/authStorage';
 
@@ -94,15 +94,15 @@ export default function DashboardPage() {
 
     return (
         <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-[#5227FF]/50 relative">
-
-            {/* Orb Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                <Orb hoverIntensity={2} rotateOnHover backgroundColor="#000000" />
-            </div>
-
-            {/* Background ambient glow matching the glass system */}
-            <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
-                <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] bg-[#5227FF]/5 rounded-full blur-[120px]"></div>
+                <DarkVeil
+                    hueShift={0}
+                    noiseIntensity={0}
+                    scanlineIntensity={0}
+                    speed={0.5}
+                    scanlineFrequency={0}
+                    warpAmount={0}
+                />
             </div>
 
             <Sidebar activeTab="home" onChange={handleTabChange} />

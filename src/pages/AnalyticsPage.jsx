@@ -28,7 +28,7 @@ import {
     CartesianGrid,
 } from 'recharts';
 import { useDecks, useDeleteDeckMutation, useMasteryStats } from '../hooks/queries';
-import Orb from '../components/Orb';
+import DarkVeil from '../components/DarkVeil';
 
 const parseDateValue = (value) => {
     if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
@@ -103,8 +103,18 @@ const ShimmerTile = ({ className = '' }) => {
 
 const AnalyticsSkeleton = () => {
     return (
-        <div className="min-h-screen bg-black text-white p-6 md:p-10 pb-24">
-            <div className="max-w-7xl mx-auto space-y-6">
+        <div className="min-h-screen bg-black text-white p-6 md:p-10 pb-24 relative overflow-x-hidden">
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <DarkVeil
+                    hueShift={0}
+                    noiseIntensity={0}
+                    scanlineIntensity={0}
+                    speed={0.5}
+                    scanlineFrequency={0}
+                    warpAmount={0}
+                />
+            </div>
+            <div className="max-w-7xl mx-auto space-y-6 relative z-10">
                 <ShimmerTile className="h-28" />
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                     <ShimmerTile className="lg:col-span-2 h-[370px]" />
@@ -297,8 +307,18 @@ export default function AnalyticsPage() {
 
     if (isError) {
         return (
-            <div className="min-h-screen bg-black text-white p-6 md:p-10 flex items-center justify-center">
-                <div className="max-w-xl w-full rounded-3xl border border-red-500/30 bg-red-500/10 backdrop-blur-xl p-8 text-center">
+            <div className="min-h-screen bg-black text-white p-6 md:p-10 flex items-center justify-center relative overflow-x-hidden">
+                <div className="fixed inset-0 z-0 pointer-events-none">
+                    <DarkVeil
+                        hueShift={0}
+                        noiseIntensity={0}
+                        scanlineIntensity={0}
+                        speed={0.5}
+                        scanlineFrequency={0}
+                        warpAmount={0}
+                    />
+                </div>
+                <div className="max-w-xl w-full rounded-3xl border border-red-500/30 bg-red-500/10 backdrop-blur-xl p-8 text-center relative z-10">
                     <AlertTriangle className="w-10 h-10 text-red-400 mx-auto mb-4" />
                     <h2 className="text-2xl font-bold mb-3">Could not load analytics</h2>
                     <p className="text-zinc-300 mb-6">
@@ -318,13 +338,16 @@ export default function AnalyticsPage() {
 
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-[#5227FF]/30 selection:text-white p-6 md:p-10 pb-24 relative overflow-x-hidden">
-            {/* Orb Background */}
             <div className="fixed inset-0 z-0 pointer-events-none">
-                <Orb hoverIntensity={2} rotateOnHover backgroundColor="#000000" />
+                <DarkVeil
+                    hueShift={0}
+                    noiseIntensity={0}
+                    scanlineIntensity={0}
+                    speed={0.5}
+                    scanlineFrequency={0}
+                    warpAmount={0}
+                />
             </div>
-
-            <div className="fixed top-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-[#5227FF]/5 rounded-full blur-[150px] pointer-events-none" />
-            <div className="fixed bottom-[-20%] left-[-10%] w-[40vw] h-[40vw] bg-cyan-500/5 rounded-full blur-[150px] pointer-events-none" />
 
             <header className="max-w-7xl mx-auto mb-12 relative z-10 flex flex-col md:flex-row md:items-end justify-between gap-6">
                 <div>

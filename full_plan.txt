@@ -1,0 +1,293 @@
+    FLASHEN FULL PLAN
+    Date: 2026-04-18
+    Project: Flashen - AI-Assisted Flashcard Engine
+
+    ==================================================
+    1) PROJECT GOAL
+    ==================================================
+    Build and scale a high-retention learning system that helps students convert study material into spaced-repetition flashcards, practice efficiently, and improve long-term memory with data-driven feedback.
+
+    Primary objective:
+    - Improve retention, consistency, and exam readiness through AI ingestion + SM-2 scheduling + analytics.
+
+    Secondary objective:
+    - Provide smooth, reliable, secure, and responsive experience across devices.
+
+
+    ==================================================
+    2) COMPLETE TECHNOLOGY STACK
+    ==================================================
+
+    Frontend Technologies:
+    - React 19
+    - Vite
+    - React Router
+    - TanStack Query
+    - Axios
+    - Framer Motion
+    - Recharts
+    - Tailwind CSS
+    - Lucide Icons
+
+    Backend Technologies:
+    - Node.js
+    - Express.js
+    - MongoDB
+    - Mongoose
+    - jsonwebtoken (JWT authentication)
+    - bcryptjs (password hashing)
+    - multer (file upload)
+    - pdf-parse (PDF text extraction)
+    - express-rate-limit
+    - helmet
+    - cors
+    - Groq SDK (LLM integration)
+
+    Testing and QA Technologies:
+    - Playwright (E2E automation)
+    - K6 (load testing / stress testing)
+    - Manual QA checklist for edge-case validation
+
+    Deployment and DevOps:
+    - Vercel (frontend hosting)
+    - Render (backend hosting)
+    - MongoDB Atlas (cloud database)
+
+    Security and Reliability Components:
+    - JWT-based protected routes
+    - Rate limiting per API area
+    - CORS allowlist controls
+    - Helmet HTTP hardening
+    - Input validation and controlled request paths
+
+
+    ==================================================
+    3) COMPLETE FEATURE LIST (CURRENT + PLANNED)
+    ==================================================
+
+    A) Authentication and User Management:
+    - User registration
+    - User login
+    - JWT session handling
+    - Protected routes/screens
+    - User profile fetch and update
+    - Terms of service acceptance flow
+
+    B) AI Ingestion and Deck Creation:
+    - Upload PDF files from frontend
+    - Parse PDF text in backend
+    - Send parsed content to LLM for flashcard generation
+    - Persist generated decks and cards
+    - Return deck-ready study data to UI
+    - Error handling for failed ingestion/parsing
+
+    C) Study Engine and Practice Mode:
+    - Theater Mode card practice
+    - Keyboard-driven flip and grading
+    - SM-2 spaced repetition scheduling logic
+    - Card state updates (interval, ease factor, repetitions)
+    - Next review date computation
+
+    D) Analytics and Progress Tracking:
+    - Mastery metrics endpoint
+    - Retention heatmap data
+    - Due forecast and review trend data
+    - Dashboard-level KPI visualization
+    - Session telemetry for long-term progress insight
+
+    E) Chat and Study Assistant:
+    - In-app chatbot endpoint
+    - Study guidance and learner support
+    - Rate-limited usage for reliability and abuse control
+
+    F) Deck Library and Data Management:
+    - Fetch user decks
+    - Delete decks
+    - Dashboard/library navigation and management
+
+    G) UX, Performance, and Quality:
+    - Lazy-loaded route bundles
+    - Responsive UI behavior
+    - QA automation (Playwright golden path)
+    - Load/stress validation (K6)
+    - Manual edge-case testing process
+
+    H) Planned Feature Enhancements (Next Milestones):
+    - Deck editing/refinement after AI generation
+    - Difficulty-adaptive card ordering
+    - Topic-level weak-area drill mode
+    - Learning streaks and motivational nudges
+    - Export/import deck support
+    - Instructor/peer shared deck links
+    - Offline review mode with queued sync
+
+
+    ==================================================
+    4) MAJOR PROBLEMS, SOLUTIONS, AND EXECUTION PLAN
+    ==================================================
+
+    Problem 1: Learners forget material quickly after one-time study.
+    Solution:
+    - Use SM-2 spaced repetition scheduling for scientifically timed reviews.
+    Execution:
+    - Keep grade-based update logic robust and monitored.
+    - Surface due cards clearly in dashboard/practice pages.
+    Expected impact:
+    - Strong reduction in forgetting curve loss across 2-6 weeks.
+
+    Problem 2: Manual flashcard creation is slow and causes friction.
+    Solution:
+    - AI-powered PDF ingestion creates flashcards automatically.
+    Execution:
+    - Improve prompt structure and output validation.
+    - Add post-generation refinement controls.
+    Expected impact:
+    - Faster time-to-first-practice and higher onboarding completion.
+
+    Problem 3: Students cannot see what to improve next.
+    Solution:
+    - Provide mastery analytics, retention trends, and due forecasts.
+    Execution:
+    - Enhance chart clarity and insight wording.
+    - Add weak-topic recommendations.
+    Expected impact:
+    - Better study decisions and higher review consistency.
+
+    Problem 4: High input frequency can break session stability in practice mode.
+    Solution:
+    - Harden state transitions and mutation handling against rapid keyboard events.
+    Execution:
+    - Add input throttling/debouncing safeguards where needed.
+    - Keep E2E stress scenario for rapid key actions.
+    Expected impact:
+    - Fewer session glitches and improved learner trust.
+
+    Problem 5: Large files or unreliable AI responses can fail ingestion.
+    Solution:
+    - Graceful error states, progress feedback, retry paths.
+    Execution:
+    - Add robust failure messaging and optional partial-result fallback.
+    - Validate max file limits and parser boundaries.
+    Expected impact:
+    - Lower abandonment during upload/ingestion.
+
+    Problem 6: Session expiration can cause confusing redirects.
+    Solution:
+    - Smooth auth guard behavior and clear session-expired messaging.
+    Execution:
+    - Standardize token checks across protected routes.
+    - Show explicit, user-friendly re-login prompt.
+    Expected impact:
+    - Reduced confusion and support burden.
+
+    Problem 7: Traffic spikes can degrade API reliability.
+    Solution:
+    - Load-tested backend and tuned rate limits.
+    Execution:
+    - Repeat K6 performance runs by release.
+    - Monitor p95 latency and error-rate thresholds.
+    Expected impact:
+    - Stable response times and fewer downtime incidents.
+
+    Problem 8: Mobile screens can break dense learning layouts.
+    Solution:
+    - Responsive patterns for dashboard/library and horizontal scroll fallbacks.
+    Execution:
+    - Run recurring mobile manual QA checks.
+    - Prioritize accessibility and tap-target quality.
+    Expected impact:
+    - Better mobile adoption and session duration.
+
+
+    ==================================================
+    5) ESTIMATED IMPROVEMENT FOR A PERSON (LEARNER OUTCOMES)
+    ==================================================
+
+    Assumption baseline:
+    - Typical learner currently uses passive rereading with inconsistent revision.
+
+    Estimated improvements after 6-12 weeks of consistent Flashen use:
+
+    1. Retention improvement:
+    - Estimated +20% to +45% increase in recall retention versus non-spaced passive study.
+
+    2. Study time efficiency:
+    - Estimated 25% to 50% reduction in wasted review time (focus shifts to due/weak cards).
+
+    3. Consistency and habit formation:
+    - Estimated +30% to +60% increase in weekly study consistency through clear review scheduling.
+
+    4. Assessment readiness:
+    - Estimated +10% to +25% improvement in test performance for content suited to flashcard-based recall.
+
+    5. Confidence and cognitive load:
+    - Estimated noticeable decrease in pre-exam anxiety due to visibility into mastery and due workload.
+
+    6. Onboarding speed to active learning:
+    - Estimated reduction from hours of manual deck creation to minutes via AI ingestion.
+
+    Important note:
+    - Actual outcomes depend on learner discipline, card quality, subject complexity, and review frequency.
+
+
+    ==================================================
+    6) IMPLEMENTATION ROADMAP (PRIORITIZED)
+    ==================================================
+
+    Phase 1 - Reliability Hardening (High Priority):
+    - Improve ingestion failure handling and progress feedback.
+    - Stabilize rapid-key practice mode transitions.
+    - Strengthen auth expiration UX.
+    - Success metric: lower error-related session drop-offs.
+
+    Phase 2 - Learning Effectiveness (High Priority):
+    - Add weak-topic drill recommendations.
+    - Add deck refinement/editor after AI generation.
+    - Improve analytics explanations and action tips.
+    - Success metric: higher review completion and retention trend.
+
+    Phase 3 - Growth and Experience (Medium Priority):
+    - Add streaks, nudges, and motivational loop.
+    - Add share/export options.
+    - Improve mobile-first dashboard and library usability.
+    - Success metric: increased weekly active users and mobile engagement.
+
+    Phase 4 - Scale and Observability (Medium Priority):
+    - Add deeper telemetry around ingestion and study funnels.
+    - Run scheduled K6 and E2E quality gates.
+    - Tune API limits and DB query paths.
+    - Success metric: p95 latency stability and lower failure rate.
+
+
+    ==================================================
+    7) SUCCESS METRICS (PROJECT + LEARNER)
+    ==================================================
+
+    Product metrics:
+    - Ingestion success rate >= 95%
+    - Practice session completion rate improvement
+    - 7-day and 30-day retention of active users
+    - p95 API latency under target threshold
+    - Error rate < 1% for core study paths
+
+    Learning metrics:
+    - Recall accuracy trend (week-over-week)
+    - Due-card completion ratio
+    - Average interval growth per card
+    - Mastery score uplift over 30/60/90 days
+
+
+    ==================================================
+    8) FINAL SUMMARY
+    ==================================================
+
+    Flashen already has a strong foundation:
+    - AI-powered content ingestion
+    - SM-2 spaced repetition core
+    - Analytics-backed progress tracking
+    - Full-stack deployment and QA scaffolding
+
+    The fastest path to major user benefit is:
+    - Reliability hardening + post-AI card refinement + weak-area targeting.
+
+    If executed well, a typical learner can expect substantial gains in retention, consistency, and exam performance over a 6-12 week period.
