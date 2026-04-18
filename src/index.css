@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes shimmer {
+  100% {
+    transform: translateX(200%);
+  }
+}
+
+.animate-shimmer {
+  animation: shimmer 1.7s linear infinite;
+}
+
+@layer base {
+  body {
+    @apply bg-black text-[#A1A1AA];
+  }
+}
