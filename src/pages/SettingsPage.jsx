@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { toast } from 'sonner';
 import Sidebar from '../components/Sidebar';
+import Orb from '../components/Orb';
 import { useCurrentUser, useUpdateProfileMutation } from '../hooks/queries';
 import { getStoredUser } from '../utils/authStorage';
 
@@ -179,6 +180,11 @@ const SettingsPage = () => {
 
     return (
         <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-[#5227FF]/40 relative">
+            {/* Orb Background */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <Orb hoverIntensity={2} rotateOnHover backgroundColor="#000000" />
+            </div>
+
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">
                 <div className="absolute top-[-18%] right-[-8%] w-[48%] h-[48%] bg-[#5227FF]/7 rounded-full blur-[140px]" />
                 <div className="absolute bottom-[-25%] left-[-12%] w-[45%] h-[45%] bg-cyan-500/5 rounded-full blur-[150px]" />

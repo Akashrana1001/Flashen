@@ -28,6 +28,7 @@ import {
     CartesianGrid,
 } from 'recharts';
 import { useDecks, useDeleteDeckMutation, useMasteryStats } from '../hooks/queries';
+import Orb from '../components/Orb';
 
 const parseDateValue = (value) => {
     if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(value)) {
@@ -317,6 +318,11 @@ export default function AnalyticsPage() {
 
     return (
         <div className="min-h-screen bg-black text-white font-sans selection:bg-[#5227FF]/30 selection:text-white p-6 md:p-10 pb-24 relative overflow-x-hidden">
+            {/* Orb Background */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <Orb hoverIntensity={2} rotateOnHover backgroundColor="#000000" />
+            </div>
+
             <div className="fixed top-[-20%] right-[-10%] w-[50vw] h-[50vw] bg-[#5227FF]/5 rounded-full blur-[150px] pointer-events-none" />
             <div className="fixed bottom-[-20%] left-[-10%] w-[40vw] h-[40vw] bg-cyan-500/5 rounded-full blur-[150px] pointer-events-none" />
 

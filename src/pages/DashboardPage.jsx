@@ -5,6 +5,7 @@ import { Upload, FileText, Play, Clock, Zap, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
+import Orb from '../components/Orb';
 import { useCurrentUser, useDecks, useMasteryStats } from '../hooks/queries';
 import { getStoredUser } from '../utils/authStorage';
 
@@ -93,6 +94,11 @@ export default function DashboardPage() {
 
     return (
         <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden selection:bg-[#5227FF]/50 relative">
+
+            {/* Orb Background */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <Orb hoverIntensity={2} rotateOnHover backgroundColor="#000000" />
+            </div>
 
             {/* Background ambient glow matching the glass system */}
             <div className="fixed inset-0 pointer-events-none z-0 overflow-hidden">

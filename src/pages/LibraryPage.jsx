@@ -15,6 +15,7 @@ import { toast } from 'sonner';
 import Sidebar from '../components/Sidebar';
 import InfoTooltip from '../components/InfoTooltip';
 import DeckSearchInput from '../components/DeckSearchInput';
+import Orb from '../components/Orb';
 import { useCurrentUser, useDecks, useMasteryStats } from '../hooks/queries';
 
 const MAX_REFRESHES_PER_WINDOW = 8;
@@ -237,6 +238,11 @@ const LibraryPage = () => {
 
     return (
         <div className="min-h-screen bg-black text-white font-sans overflow-x-hidden relative selection:bg-[#5227FF]/40">
+            {/* Orb Background */}
+            <div className="fixed inset-0 z-0 pointer-events-none">
+                <Orb hoverIntensity={2} rotateOnHover backgroundColor="#000000" />
+            </div>
+
             <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
                 <div className="absolute top-[-20%] left-[-6%] w-[46%] h-[46%] rounded-full bg-[#5227FF]/7 blur-[140px]" />
                 <div className="absolute bottom-[-20%] right-[-12%] w-[48%] h-[48%] rounded-full bg-cyan-500/5 blur-[140px]" />
