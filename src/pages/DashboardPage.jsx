@@ -1,11 +1,12 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { ResponsiveContainer, AreaChart, Area, XAxis, Tooltip } from 'recharts';
-import { Upload, FileText, Play, Clock, Zap } from 'lucide-react';
+import { Upload, FileText, Play, Clock, Zap, ArrowLeft } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/Sidebar';
 import Header from '../components/Header';
-import { useDecks, useMasteryStats } from '../hooks/queries';
+import { useCurrentUser, useDecks, useMasteryStats } from '../hooks/queries';
+import { getStoredUser } from '../utils/authStorage';
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -27,6 +28,25 @@ export default function DashboardPage() {
 
     const { data: decksData = [], isLoading } = useDecks();
     const { data: masteryStats } = useMasteryStats();
+    const { data: currentUser } = useCurrentUser();
+
+    const storedUser = getStoredUser();
+    const rawName = (currentUser?.name || storedUser?.name || '').trim();
+    const firstName = rawName ? rawName.split(/\s+/)[0] : 'Learner';
+
+    const dueCardCount = decksData.reduce((count, deck) => {
+        const cards = Array.isArray(deck.cards) ? deck.cards : [];
+        const dueForReview = cards.filter((card) => {
+            if (!card?.nextReview) return false;
+            const reviewTime = new Date(card.nextReview).getTime();
+            if (Number.isNaN(reviewTime)) return false;
+            return reviewTime <= Date.now();
+        }).length;
+
+        return count + dueForReview;
+    }, 0);
+
+    const cardNoun = dueCardCount === 1 ? 'card' : 'cards';
 
     const retentionChartData = (masteryStats?.forecastData || []).map((point) => ({
         name: new Date(point.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' }),
@@ -81,8 +101,22 @@ export default function DashboardPage() {
 
             <Sidebar activeTab="home" onChange={handleTabChange} />
 
-            <main className="lg:ml-20 min-h-screen flex flex-col relative z-10 pl-20 lg:pl-0">
-                <Header title="Good Morning, Alex" subtitle="You have 42 cards due for review." />
+            <main className="lg:ml-20 min-h-screen flex flex-col relative z-10">
+                <div className="px-8 pt-6">
+                    <button
+                        type="button"
+                        onClick={() => navigate('/')}
+                        className="inline-flex items-center gap-2 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-sm text-zinc-300 hover:text-white hover:bg-white/10 transition-colors"
+                    >
+                        <ArrowLeft className="w-4 h-4" />
+                        Back to Home
+                    </button>
+                </div>
+
+                <Header
+                    title={`Good Morning, ${firstName}`}
+                    subtitle={`You have ${dueCardCount} ${cardNoun} due for review.`}
+                />
 
                 <div className="flex-1 p-6 lg:p-10 pt-2 lg:pt-4">
                     <motion.div

@@ -11,9 +11,23 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const normalizeOrigin = (value) => {
+    if (!value || typeof value !== 'string') return '';
+
+    const trimmed = value.trim().replace(/\/+$/, '');
+    if (!trimmed) return '';
+
+    try {
+        const parsed = new URL(trimmed);
+        return `${parsed.protocol}//${parsed.host}`.toLowerCase();
+    } catch {
+        return trimmed.toLowerCase();
+    }
+};
+
 const envOrigins = (process.env.CLIENT_URL || '')
     .split(',')
-    .map((origin) => origin.trim())
+    .map((origin) => normalizeOrigin(origin))
     .filter(Boolean);
 
 const defaultDevOrigins = [
@@ -29,16 +43,23 @@ const defaultDevOrigins = [
     'http://127.0.0.1:5176',
     'http://127.0.0.1:5177',
     'http://127.0.0.1:5178',
-];
+].map((origin) => normalizeOrigin(origin));
 
-const allowedOrigins = new Set([...defaultDevOrigins, ...envOrigins]);
+const defaultProdOrigins = [
+    'https://flashen-one.vercel.app',
+    'https://flashen.onrender.com',
+].map((origin) => normalizeOrigin(origin));
+
+const allowedOrigins = new Set([...defaultDevOrigins, ...defaultProdOrigins, ...envOrigins]);
 
 // ================= Security & Performance Middleware =================
 app.use(helmet()); // Sets HTTP security headers
 app.use(cors({
     origin: (origin, callback) => {
+        const normalizedOrigin = normalizeOrigin(origin);
+
         // Allow non-browser tools (no Origin header) and known local/dev origins.
-        if (!origin || allowedOrigins.has(origin)) {
+        if (!origin || allowedOrigins.has(normalizedOrigin)) {
             return callback(null, true);
         }
 

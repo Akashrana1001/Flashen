@@ -244,7 +244,7 @@ const LibraryPage = () => {
 
             <Sidebar activeTab="library" onChange={handleNavChange} />
 
-            <main className="relative z-10 lg:ml-20 min-h-screen pl-20 lg:pl-0 px-6 lg:px-10 py-8">
+            <main className="relative z-10 lg:ml-20 min-h-screen px-6 lg:px-10 py-8">
                 <div className="max-w-7xl mx-auto space-y-7">
                     <header className="space-y-4">
                         <div className="flex flex-col gap-3 lg:flex-row lg:items-end lg:justify-between">

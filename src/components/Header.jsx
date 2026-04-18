@@ -1,7 +1,7 @@
 import React from 'react';
 import { Plus, User } from 'lucide-react';
 
-const Header = ({ title = "Good Morning, Alex", subtitle = "You have 42 cards due for review." }) => {
+const Header = ({ title = "Good Morning", subtitle = "Ready for your next review session?" }) => {
     return (
         <header className="w-full flex items-center justify-between py-6 px-8 bg-transparent">
             <div>

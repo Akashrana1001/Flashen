@@ -1,8 +1,23 @@
 import axios from 'axios';
 
+const normalizeBaseUrl = (value = '') => {
+    return String(value).trim().replace(/\/+$/, '');
+};
+
+const ensureApiBaseUrl = (value = '') => {
+    const normalized = normalizeBaseUrl(value);
+    if (!normalized) return '';
+    return normalized.endsWith('/api') ? normalized : `${normalized}/api`;
+};
+
+const runtimeApiUrl = ensureApiBaseUrl(import.meta.env.VITE_API_URL || '');
+const fallbackApiUrl = import.meta.env.PROD
+    ? 'https://flashen.onrender.com/api'
+    : 'http://localhost:5000/api';
+
 // Create a globally configured Axios instance
 const api = axios.create({
-    baseURL: import.meta.env.VITE_API_URL || 'http://localhost:5000/api',
+    baseURL: runtimeApiUrl || fallbackApiUrl,
     headers: {
         'Content-Type': 'application/json',
     },

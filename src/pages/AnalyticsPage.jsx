@@ -623,7 +623,52 @@ export default function AnalyticsPage() {
                             </div>
                         </div>
 
-                        <div className="overflow-x-auto">
+                        <div className="md:hidden space-y-3">
+                            {filteredDecks.map((deck) => (
+                                <div
+                                    key={`mobile-${deck.id}`}
+                                    className="rounded-2xl border border-white/10 bg-black/35 p-4"
+                                >
+                                    <div className="flex items-start justify-between gap-3">
+                                        <div>
+                                            <p className="text-sm font-semibold text-white">{deck.name}</p>
+                                            <p className="mt-1 text-xs text-zinc-500">Last studied: {deck.lastStudied}</p>
+                                        </div>
+
+                                        <button
+                                            type="button"
+                                            onClick={(e) => handleDeleteDeck(e, deck)}
+                                            disabled={pendingDeleteDeckId === deck.id}
+                                            className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-red-500/30 bg-red-500/10 text-red-300 hover:bg-red-500/20 hover:border-red-500/50 transition-colors disabled:opacity-60 disabled:cursor-not-allowed"
+                                        >
+                                            {pendingDeleteDeckId === deck.id ? (
+                                                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                                            ) : (
+                                                <Trash2 className="w-3.5 h-3.5" />
+                                            )}
+                                            <span className="text-xs font-medium">Delete</span>
+                                        </button>
+                                    </div>
+
+                                    <div className="mt-3 grid grid-cols-3 gap-2 text-xs">
+                                        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
+                                            <p className="text-zinc-500 uppercase tracking-wider">Mastery</p>
+                                            <p className="mt-1 text-zinc-200 font-semibold">{deck.mastery}%</p>
+                                        </div>
+                                        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
+                                            <p className="text-zinc-500 uppercase tracking-wider">Due Today</p>
+                                            <p className="mt-1 text-zinc-200 font-semibold">{deck.dueTodayCount}</p>
+                                        </div>
+                                        <div className="rounded-lg border border-white/10 bg-black/30 p-2">
+                                            <p className="text-zinc-500 uppercase tracking-wider">Next Review</p>
+                                            <p className="mt-1 text-zinc-200 font-semibold">{deck.nextReview}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            ))}
+                        </div>
+
+                        <div className="hidden md:block overflow-x-auto">
                             <table className="w-full text-left border-collapse">
                                 <thead>
                                     <tr className="text-zinc-500 text-xs uppercase tracking-wider border-b border-white/5">

@@ -12,6 +12,7 @@ import {
 } from 'lucide-react';
 import ScrollReveal from '../components/ScrollReveal';
 import ParallaxBackground from '../components/ParallaxBackground';
+import { getStoredToken, getStoredUser } from '../utils/authStorage';
 
 const LightPillar = lazy(() => import('../components/LightPillar'));
 
@@ -59,6 +60,10 @@ const LandingPage = () => {
     const headlineTop = ['Long-term', 'retention', 'beats'];
     const headlineBottom = ['short-term', 'cramming.'];
 
+    const isAuthenticated = Boolean(getStoredToken() && getStoredUser());
+    const primaryRoute = isAuthenticated ? '/dashboard' : '/login';
+    const handlePrimaryCta = () => navigate(primaryRoute);
+
     return (
         <motion.div
             ref={pageRef}
@@ -81,16 +86,16 @@ const LandingPage = () => {
                     </div>
                     <div className="flex items-center gap-4">
                         <button
-                            onClick={() => navigate('/login')}
+                            onClick={handlePrimaryCta}
                             className="text-zinc-400 hover:text-white transition-colors text-sm font-medium"
                         >
-                            Sign In
+                            {isAuthenticated ? 'Get Started' : 'Sign In'}
                         </button>
                         <button
-                            onClick={() => navigate('/login')}
+                            onClick={handlePrimaryCta}
                             className="bg-[#5227FF] hover:bg-[#5227FF]/90 text-white px-4 py-2 rounded-lg text-sm font-medium transition-all shadow-[0_0_15px_rgba(82,39,255,0.3)]"
                         >
-                            Start Studying
+                            {isAuthenticated ? 'Go to Dashboard' : 'Start Studying'}
                         </button>
                     </div>
                 </div>
@@ -173,11 +178,11 @@ const LandingPage = () => {
                         className="flex flex-col sm:flex-row items-center justify-center gap-4"
                     >
                         <button
-                            onClick={() => navigate('/login')}
+                            onClick={handlePrimaryCta}
                             className="w-full sm:w-auto flex items-center justify-center gap-2 bg-[#5227FF] hover:bg-[#5227FF]/90 text-white px-6 py-3 rounded-lg font-medium transition-all shadow-[0_0_20px_rgba(82,39,255,0.4)]"
                         >
                             <Upload className="w-4 h-4" />
-                            Upload your first PDF
+                            {isAuthenticated ? 'Open Your Dashboard' : 'Upload your first PDF'}
                         </button>
                         <button className="w-full sm:w-auto flex items-center justify-center gap-2 bg-transparent border border-zinc-700 hover:border-zinc-500 hover:bg-zinc-800/50 text-white px-6 py-3 rounded-lg font-medium transition-all">
                             <BookOpen className="w-4 h-4 text-zinc-400" />

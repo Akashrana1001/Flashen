@@ -142,7 +142,7 @@ const AuthCard = ({ onBack, onLogin, defaultTab = 'login' }) => {
                             transition={{ duration: 0.3 }}
                         >
                             <div className="relative group">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                                     <User className="h-5 w-5 text-zinc-500 group-focus-within:text-[#5227FF] transition-colors" />
                                 </div>
                                 <input
@@ -157,7 +157,7 @@ const AuthCard = ({ onBack, onLogin, defaultTab = 'login' }) => {
                     )}
 
                     <motion.div layout key="emailField" className="relative group mb-4">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                             <Mail className="h-5 w-5 text-zinc-500 group-focus-within:text-[#5227FF] transition-colors" />
                         </div>
                         <motion.input
@@ -172,7 +172,7 @@ const AuthCard = ({ onBack, onLogin, defaultTab = 'login' }) => {
                     </motion.div>
 
                     <motion.div layout key="passwordField" className="relative group mb-4">
-                        <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                        <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
                             <Lock className="h-5 w-5 text-zinc-500 group-focus-within:text-[#5227FF] transition-colors" />
                         </div>
                         <motion.input

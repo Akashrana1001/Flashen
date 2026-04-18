@@ -186,7 +186,7 @@ const SettingsPage = () => {
 
             <Sidebar activeTab="settings" onChange={handleNavChange} />
 
-            <main className="relative z-10 lg:ml-20 min-h-screen pl-20 lg:pl-0 px-6 lg:px-10 py-8">
+            <main className="relative z-10 lg:ml-20 min-h-screen px-6 lg:px-10 py-8">
                 <div className="max-w-7xl mx-auto">
                     <button
                         onClick={() => navigate('/dashboard')}
@@ -253,8 +253,8 @@ const SettingsPage = () => {
                                             type="button"
                                             onClick={() => setActivePanel(tab.id)}
                                             className={`w-full rounded-xl border px-3 py-3 text-left transition-all ${isActive
-                                                    ? 'border-[#5227FF]/60 bg-[#5227FF]/15 text-white shadow-[0_0_18px_rgba(82,39,255,0.2)]'
-                                                    : 'border-white/10 bg-black/30 text-zinc-400 hover:text-zinc-100 hover:border-white/20'
+                                                ? 'border-[#5227FF]/60 bg-[#5227FF]/15 text-white shadow-[0_0_18px_rgba(82,39,255,0.2)]'
+                                                : 'border-white/10 bg-black/30 text-zinc-400 hover:text-zinc-100 hover:border-white/20'
                                                 }`}
                                         >
                                             <span className="inline-flex items-center gap-2 text-sm font-medium">
