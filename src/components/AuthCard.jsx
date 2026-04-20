@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Mail, Lock, User, Loader2, Wifi, WifiOff, CheckCircle2 } from 'lucide-react';
 import api from '../api';
 import { toast } from 'sonner';
 import { setAuthSession } from '../utils/authStorage';
+import useServerWarmup from '../hooks/useServerWarmup';
 
 const getPasswordStrength = (password) => {
     if (!password) return 0;
@@ -33,6 +34,8 @@ const AuthCard = ({ onBack, onLogin, defaultTab = 'login' }) => {
     const [error, setError] = useState(null);
     const [isShaking, setIsShaking] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
+
+    const { serverStatus, serverReady } = useServerWarmup();
 
     const passwordStrength = getPasswordStrength(password);
     const strengthLabel = getStrengthLabel(passwordStrength);
@@ -91,6 +94,14 @@ const AuthCard = ({ onBack, onLogin, defaultTab = 'login' }) => {
         shake: { x: [-8, 8, -6, 6, -3, 3, 0], transition: { duration: 0.4 } },
         idle: { x: 0 }
     };
+
+    // Map serverStatus → visual chip props
+    const statusChip = {
+        idle:    { label: '',                       color: 'transparent',        icon: null },
+        warming: { label: 'Connecting to server…',  color: 'rgba(251,191,36,0.15)', icon: 'pulse' },
+        slow:    { label: 'Server is waking up…',   color: 'rgba(251,191,36,0.15)', icon: 'pulse' },
+        ready:   { label: 'Server ready',           color: 'rgba(34,197,94,0.12)',  icon: 'check' },
+    }[serverStatus] || { label: '', color: 'transparent', icon: null };
 
     return (
         <motion.div
@@ -237,6 +248,34 @@ const AuthCard = ({ onBack, onLogin, defaultTab = 'login' }) => {
                     {isLogin ? 'Sign up' : 'Log in'}
                 </button>
             </motion.p>
+
+            {/* ── Server warm-up status chip ── */}
+            <AnimatePresence>
+                {statusChip.label ? (
+                    <motion.div
+                        key={serverStatus}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: 6 }}
+                        transition={{ duration: 0.35 }}
+                        className="mt-5 flex items-center justify-center gap-2 text-xs rounded-lg px-3 py-2"
+                        style={{ backgroundColor: statusChip.color, border: '1px solid rgba(255,255,255,0.06)' }}
+                    >
+                        {statusChip.icon === 'pulse' && (
+                            <span className="relative flex h-2 w-2">
+                                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-yellow-400 opacity-75" />
+                                <span className="relative inline-flex rounded-full h-2 w-2 bg-yellow-400" />
+                            </span>
+                        )}
+                        {statusChip.icon === 'check' && (
+                            <CheckCircle2 className="w-3.5 h-3.5 text-green-400 flex-shrink-0" />
+                        )}
+                        <span className={statusChip.icon === 'check' ? 'text-green-400' : 'text-yellow-400'}>
+                            {statusChip.label}
+                        </span>
+                    </motion.div>
+                ) : null}
+            </AnimatePresence>
         </motion.div>
     );
 };

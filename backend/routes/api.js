@@ -35,6 +35,13 @@ const signToken = (userId) => {
     return jwt.sign({ userId }, JWT_SECRET, { expiresIn: '7d' });
 };
 
+// ================= Public Health Check =================
+// Lightweight ping so the frontend can pre-warm Render's cold-start container.
+// No DB queries – responds instantly when the Node process is alive.
+router.get('/health', (_req, res) => {
+    res.status(200).json({ ok: true, ts: Date.now() });
+});
+
 // ================= Public Auth Routes =================
 router.post('/auth/register', async (req, res, next) => {
     try {

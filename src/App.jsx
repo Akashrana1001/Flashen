@@ -1,4 +1,4 @@
-﻿import React, { Suspense, lazy } from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter, Routes, Route, useNavigate, Navigate, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
@@ -7,6 +7,7 @@ import TermsOfServiceGate from './components/TermsOfServiceGate';
 import ChatbotWidget from './components/ChatbotWidget';
 
 import { getStoredToken, getStoredUser, clearAuthSession } from './utils/authStorage';
+import useServerWarmup from './hooks/useServerWarmup';
 
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const AuthPage = lazy(() => import('./pages/AuthPage'));
@@ -175,6 +176,10 @@ const AnimatedRoutes = ({ authState, onAuthSuccess, onTermsAccepted, onLogout })
 };
 
 const App = () => {
+  // Pre-warm the Render backend the moment the site loads so auth calls
+  // feel instant even after a cold start (free tier spins down after inactivity).
+  useServerWarmup();
+
   const [authState, setAuthState] = React.useState(() => ({
     token: getStoredToken(),
     user: getStoredUser(),
