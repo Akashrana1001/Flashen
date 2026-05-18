@@ -1,226 +1,106 @@
-﻿# Flashen - The Flashcard Engine
+# Flashen
 
-Flashen is a full-stack, AI-assisted spaced-repetition learning platform that converts PDFs into study decks, schedules reviews with an SM-2 engine, and provides mastery analytics with retention tracking.
+**Turns any PDF into a spaced-repetition flashcard deck in seconds — with mastery analytics, retention heatmaps, and an integrated study assistant.**
 
-## Live Deployments
+🔴 **[Live App →](https://flashen-one.vercel.app/)**
 
-- Frontend (Vercel): https://flashen-one.vercel.app/
-- Backend API (Render): https://flashen.onrender.com/
+> 🎥 **[Watch 60-sec Demo →](#)** ← add your Loom link here
 
-## Table of Contents
+---
 
-- [Product Overview](#product-overview)
-- [Architecture](#architecture)
-- [Core Flows](#core-flows)
-- [Tech Stack](#tech-stack)
-- [Project Structure](#project-structure)
-- [API Surface](#api-surface)
-- [Environment Variables](#environment-variables)
-- [Local Development](#local-development)
-- [Testing and QA](#testing-and-qa)
-- [Deployment](#deployment)
-- [Security and Reliability](#security-and-reliability)
-- [Troubleshooting](#troubleshooting)
+## The Problem
 
-## Product Overview
+Students upload notes to ChatGPT, get a wall of text back, and still fail exams.
 
-Flashen is designed for high-retention learning workflows:
+The real problem is not summarization — it is retention. Reading a summary once does nothing. You need to be tested on the right card at the right time, repeatedly, until it sticks.
 
-1. Upload a PDF (notes/textbook/chapter).
-2. Use AI ingestion to generate deck-ready flashcards.
-3. Study in Theater Mode with keyboard-driven grading.
-4. Update intervals and ease factors via SM-2.
-5. Track progress with mastery analytics and retention heatmaps.
-6. Ask the integrated assistant for study guidance.
+---
+
+## The Solution
+
+Flashen takes any PDF — textbook chapter, lecture notes, research paper — and converts it into a flashcard deck via Groq LLM. Cards are then scheduled using the **SM-2 spaced repetition algorithm**, the same algorithm behind Anki, tracking interval, ease factor, and repetition count per card.
+
+Study in Theater Mode, grade yourself, and let the algorithm decide when you see each card next. Mastery analytics and retention heatmaps show exactly where you stand.
+
+---
 
 ## Architecture
 
-### High-Level System Design
-
-```mermaid
-flowchart LR
-	A[Web Client\nReact + Vite\nHosted on Vercel]
-	B[Backend API\nExpress + Node\nHosted on Render]
-	C[(MongoDB Atlas\nUsers / Decks / Cards)]
-	D[Groq LLM API\nIngestion + Chat]
-	E[SM-2 Engine\nScheduling Logic]
-
-	A -->|HTTPS REST + JWT| B
-	B --> C
-	B --> D
-	B --> E
-	E --> C
+```
+React (Vite) ──► Node.js / Express ──► Groq LLM API
+                       │
+                  MongoDB Atlas
+                (User / Deck / Card)
+                       │
+                  SM-2 Engine
+               (scheduling logic)
 ```
 
-### Runtime Architecture Notes
+---
 
-- Frontend is a React SPA with lazy-loaded route bundles and protected screens.
-- Backend is a stateless Express API with JWT auth middleware and route-level rate limits.
-- MongoDB stores user-scoped entities (User, Deck, Card), including telemetry for retention analytics.
-- Groq powers both PDF-to-card ingestion and chatbot interactions.
-- CORS allowlist supports both local development and deployed origins.
+## Key Engineering Decisions
+
+**SM-2 spaced repetition engine** — not a wrapper around someone else's library. Implemented from scratch. Tracks `interval`, `repetitions`, and `easeFactor` per card. `nextReview` updates on every grade so the algorithm always knows what to serve next.
+
+**Groq for fast inference** — PDF text is extracted server-side, chunked, and sent to Groq. Cards come back structured and ready to persist. Fast enough to feel instant.
+
+**Mastery analytics** — review history is stored as telemetry per card. The backend aggregates it into retention heatmaps and forecast graphs so students can see which topics are slipping before an exam.
+
+**Production-grade security** — JWT auth, Helmet headers, CORS allowlist, route-level rate limiting, owner-scoped MongoDB queries. No user can touch another user's data.
+
+**Validated with real QA** — Playwright E2E golden-path tests cover the full study flow. K6 load tests validate the auth, chat, and study routes under configurable concurrent load.
+
+---
+
+## Stack
+
+| Layer | Tech |
+|---|---|
+| Frontend | React 19, Vite, Tailwind CSS, TanStack Query, Recharts, Framer Motion |
+| Backend | Node.js, Express, MongoDB, Mongoose, JWT, bcryptjs |
+| AI | Groq SDK (llama-3.1-8b-instant) |
+| File Handling | multer, pdf-parse |
+| Security | Helmet, express-rate-limit, CORS allowlist |
+| QA | Playwright (E2E), K6 (load testing) |
+| Deployment | Vercel (frontend), Render (backend) |
+
+---
 
 ## Core Flows
 
-### 1) Authentication and Session
+**PDF Ingestion**
+1. User uploads PDF
+2. Backend extracts text, prompts Groq for structured flashcards
+3. Deck and cards are persisted and returned to the client
 
-1. User registers/logs in via /api/auth/register or /api/auth/login.
-2. Backend returns JWT + sanitized user profile.
-3. Frontend stores token and app state uses protected route guards.
+**Study and Scheduling**
+1. User grades a card in Theater Mode
+2. SM-2 algorithm updates interval, repetitions, and ease factor
+3. nextReview is set — card returns at the optimal time
 
-### 2) PDF Ingestion
+**Analytics**
+1. Frontend queries mastery endpoint with browser timezone
+2. Backend aggregates review history and due forecasts
+3. UI renders retention heatmap and forecast graph
 
-1. Frontend uploads PDF multipart payload to /api/ingest.
-2. Backend extracts PDF text and prompts Groq for structured flashcards.
-3. Deck + cards are persisted and returned to the client.
+---
 
-### 3) Study and Scheduling
-
-1. User grades cards in Theater Mode.
-2. /api/study/grade applies SM-2 (interval, repetitions, ease factor).
-3. nextReview and review telemetry are updated for analytics.
-
-### 4) Analytics and Retention
-
-1. Frontend queries /api/analytics/mastery with browser timezone.
-2. Backend aggregates review history + due forecasts.
-3. UI renders mastery KPIs, forecast graph, and retention heatmap.
-
-## Tech Stack
-
-### Frontend
-
-- React 19 + Vite
-- React Router
-- TanStack Query
-- Axios
-- Framer Motion
-- Recharts
-- Tailwind CSS
-- Lucide Icons
-
-### Backend
-
-- Node.js + Express
-- MongoDB + Mongoose
-- JWT auth (jsonwebtoken)
-- bcryptjs
-- multer + pdf-parse
-- express-rate-limit
-- helmet + cors
-- Groq SDK
-
-### QA / Automation
-
-- Playwright (E2E)
-- K6 (load testing)
-
-## Project Structure
-
-```text
-.
-|-- backend/
-|   |-- controllers/        # route handlers (auth, ingest, analytics, chat, study)
-|   |-- models/             # mongoose schemas (User, Deck, Card)
-|   |-- routes/             # API route definitions
-|   |-- services/           # core business logic (SM-2)
-|   `-- server.js           # app bootstrap, CORS, security, rate limiting
-|-- src/
-|   |-- components/         # reusable UI (chat, auth, sidebar, effects)
-|   |-- hooks/              # TanStack Query hooks and mutations
-|   |-- pages/              # route-level screens
-|   |-- utils/              # auth/session helpers
-|   |-- api.js              # axios client and API base URL handling
-|   `-- App.jsx             # route composition and guards
-|-- tests/e2e/              # Playwright golden-path tests
-|-- stress-test.js          # K6 load test scenario
-|-- playwright.config.ts
-|-- QA_AUTOMATION.md
-`-- QA_MANUAL_CHECKLIST.md
-```
-
-## API Surface
-
-All endpoints are served under /api.
-
-### Public
-
-- POST /auth/register
-- POST /auth/login
-
-### Protected (JWT)
-
-- GET /user/me
-- PATCH /user/accept-terms
-- PATCH /user/profile
-- POST /ingest
-- POST /study/grade
-- GET /decks
-- DELETE /decks/:deckId
-- GET /analytics/mastery
-- GET /stats/mastery
-- POST /chat
-
-## Environment Variables
-
-### Frontend (Vercel)
-
-| Variable | Required | Example |
-|---|---|---|
-| VITE_API_URL | Yes | https://flashen.onrender.com/api |
-| E2E_BASE_URL | No | http://localhost:5173 |
-| E2E_API_URL | No | http://localhost:5000/api |
-
-### Backend (Render)
-
-| Variable | Required | Example |
-|---|---|---|
-| PORT | Yes | 5000 |
-| MONGO_URI | Yes | mongodb://... |
-| JWT_SECRET | Yes | your_jwt_secret |
-| GROQ_API_KEY | Yes | gsk_... |
-| GROQ_MODEL | Yes | llama-3.1-8b-instant |
-| CLIENT_URL | Yes | https://flashen-one.vercel.app |
-| API_RATE_LIMIT_MAX | No | 200 |
-| REFRESH_LIMIT_WINDOW_MS | No | 600000 |
-| REFRESH_LIMIT_MAX | No | 60 |
-| CHAT_RATE_WINDOW_MS | No | 60000 |
-| CHAT_RATE_MAX | No | 15 |
-
-## Local Development
-
-### Prerequisites
-
-- Node.js 18+
-- npm 9+
-- MongoDB (local or Atlas)
-
-### 1) Install dependencies
+## Local Setup
 
 ```bash
-# frontend (project root)
-npm install
+# Backend
+cd backend && npm install && cp .env.example .env && npm run dev
 
-# backend
-cd backend
-npm install
+# Frontend
+npm install && npm run dev
 ```
 
-### 2) Configure environment
-
-Create local env files:
-
-- root .env
-- backend/.env
-
-Minimum local values:
+Minimum env values:
 
 ```env
 # root .env
 VITE_API_URL=http://localhost:5000/api
-```
 
-```env
 # backend/.env
 PORT=5000
 MONGO_URI=mongodb://localhost:27017/flashcard-engine
@@ -230,94 +110,20 @@ GROQ_MODEL=llama-3.1-8b-instant
 CLIENT_URL=http://localhost:5173
 ```
 
-### 3) Run services
+---
+
+## Testing
 
 ```bash
-# terminal 1 (backend)
-cd backend
-npm run dev
-
-# terminal 2 (frontend)
-cd ..
-npm run dev
-```
-
-## Testing and QA
-
-### Frontend Build
-
-```bash
-npm run build
-```
-
-### E2E (Playwright)
-
-```bash
+# E2E
 npm run test:e2e:golden
-npm run test:e2e
-npm run test:e2e:report
-```
 
-### Load Test (K6)
-
-```bash
+# Load test (requires K6 installed globally)
 npm run test:load
 ```
 
-Notes:
-
-- K6 must be installed globally on your machine.
-- Load test credentials can be provided with K6_EMAIL and K6_PASSWORD.
-
-See also:
-
-- QA_AUTOMATION.md
-- QA_MANUAL_CHECKLIST.md
-
-## Deployment
-
-### Frontend (Vercel)
-
-1. Connect repository to Vercel.
-2. Set env variable VITE_API_URL=https://flashen.onrender.com/api.
-3. Build command: npm run build.
-4. Output directory: dist.
-
-### Backend (Render)
-
-1. Create Web Service from backend directory.
-2. Start command: npm start.
-3. Set required environment variables from the table above.
-4. Ensure CLIENT_URL includes deployed frontend URL.
-
-## Security and Reliability
-
-- Helmet enabled for secure HTTP headers.
-- CORS allowlist with normalized origin validation.
-- Global and route-level rate limiting.
-- JWT authentication for protected routes.
-- Owner-scoped queries for deck/card isolation.
-- Centralized error handling in backend router and app layer.
-
-## Troubleshooting
-
-### CORS errors in production
-
-- Verify Render CLIENT_URL includes the Vercel domain.
-- Verify VITE_API_URL points to Render /api endpoint.
-- Redeploy both frontend and backend after env updates.
-
-### Dev server fails to connect API
-
-- Confirm backend is running on expected port.
-- Confirm root .env VITE_API_URL matches backend URL.
-- Confirm MongoDB and GROQ_API_KEY are valid.
-
-### Empty analytics data
-
-- Ensure study events are being submitted to /api/study/grade.
-- Ensure cards have review telemetry (reviewLog/reviewCount).
-
 ---
 
-If you want, this README can be extended with a separate docs folder for architecture decision records (ADRs), API schemas, and runbooks for incident response.
+## What I Can Build For You
+
+If you need an LLM-powered learning tool, a document ingestion pipeline, or a production Node.js + AI backend — [let's talk](mailto:sandeepakash537@gmail.com).
