@@ -4,7 +4,6 @@
 
 🔴 **[Live App →](https://flashen-one.vercel.app/)**
 
-> 🎥 **[Watch 60-sec Demo →](#)** ← add your Loom link here
 
 ---
 
